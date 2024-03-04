@@ -12,7 +12,7 @@ const ContactPage = () => {
         <form action="" className={styles.form}>
           <input type="text" placeholder="Name and Surname" />
           <input type="email" placeholder="Email Adress" />
-          <input type="number" placeholder="Phone Number (Optional)" />
+          <input type="tel" placeholder="Phone Number (Optional)" />
           <textarea
             name=""
             id=""
