@@ -1,3 +1,5 @@
+import { unstable_noStore as noStore } from "next/cache";
+
 /* const users = [
   { id: 1, name: "John" },
   { id: 2, name: "Herry" },
@@ -29,24 +31,24 @@ export const getPost = async (slug) => {
   try {
     connectToDb();
     const post = await Post.findOne({ slug: slug });
-    console.log('testdeneme', post);
+    console.log("testdeneme", post);
     return post;
   } catch (error) {
     console.log(error);
-    throw new Error('Failed to fetch post');
+    throw new Error("Failed to fetch post");
   }
 };
 
 export const getUser = async (id) => {
+  noStore();
   try {
     connectToDb();
     const user = await User.findById(id);
     return user;
   } catch (error) {
     console.log(error);
-    throw new Error('Failed to fetch user!');
+    throw new Error("Failed to fetch user!");
   }
-  
 };
 
 export const getUsers = async () => {
@@ -56,7 +58,6 @@ export const getUsers = async () => {
     return users;
   } catch (error) {
     console.log(error);
-    throw new Error('Failed to fetch user');
+    throw new Error("Failed to fetch user");
   }
-  
 };

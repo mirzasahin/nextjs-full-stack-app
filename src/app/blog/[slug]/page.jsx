@@ -18,6 +18,17 @@ import { getPost } from "@/lib/data";
   return res.json();
 }; */
 
+export const generateMetadata = async ({ params }) => {
+  const { slug } = params;
+
+  const post = await getPost(slug);
+
+  return {
+    title: post.title,
+    description: post.desc,
+  };
+};
+
 const SinglePostPage = async ({ params }) => {
   const { slug } = params; // const slug = params.slug;
 
@@ -38,7 +49,6 @@ const SinglePostPage = async ({ params }) => {
       <div className={styles.textContainer}>
         <h1 className={styles.title}>{post.title}</h1>
         <div className={styles.detail}>
-          
           {post && (
             <Suspense fallback={<div>Loading...</div>}>
               <PostUser userId={post.userId} />
