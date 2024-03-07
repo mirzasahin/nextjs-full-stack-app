@@ -4,13 +4,13 @@ import styles from "./contact.module.css";
 import Image from "next/image";
 
 const ContactPage = () => {
-  const [isClient, setIsClient] = useState(false);
+ /*  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
-  const a = Math.random()
+  const a = Math.random() */
 
   return (
     <div className={styles.container}>
@@ -18,7 +18,7 @@ const ContactPage = () => {
         <Image src="/contact.png" alt="" fill className={styles.img} />
       </div>
       <div className={styles.formContainer}>
-      {isClient && a}
+      {/* {isClient && a} */}
         <form action="" className={styles.form}>
           <input type="text" placeholder="Name and Surname" />
           <input type="email" placeholder="Email Adress" />
