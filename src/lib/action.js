@@ -1,9 +1,9 @@
+"use server";
+import { revalidatePath } from "next/cache";
 import { Post } from "./models";
 import { connectToDb } from "./utils";
 
 export const addPost = async (formData) => {
-  "use server";
-
   const title = formData.get("title");
   const desc = formData.get("desc");
   const slug = formData.get("slug");
@@ -13,7 +13,8 @@ export const addPost = async (formData) => {
 
   try {
     connectToDb();
-    const newPost = new Post({ // If data names is same, you can use just title, desc, slug and userId.
+    const newPost = new Post({
+      // If data names is same, you can use just title, desc, slug and userId.
       title: title,
       desc: desc,
       slug: slug,
@@ -21,12 +22,27 @@ export const addPost = async (formData) => {
     });
 
     await newPost.save();
-    console.log('save to db');
-
+    console.log("save to db");
+    revalidatePath("/blog"); // Whenever we add a new post even if we cache our blog posts it's going to revalidate our path and it's going to show us the fresh data.
   } catch (error) {
     console.log(error);
     return { error: "Something went wrong!" };
   }
 
   console.log(title, desc, slug, userId);
+};
+
+export const deletePost = async (formData) => {
+  const { id } = Object.fromEntries(formData); // Object destructuring | Short way
+
+  try {
+    connectToDb();
+
+    await Post.findByIdAndDelete(id);
+    console.log("deleted from db");
+    revalidatePath("/blog"); // Whenever we add a new post even if we cache our blog posts it's going to revalidate our path and it's going to show us the fresh data.
+  } catch (error) {
+    console.log(error);
+    return { error: "Something went wrong!" };
+  }
 };
