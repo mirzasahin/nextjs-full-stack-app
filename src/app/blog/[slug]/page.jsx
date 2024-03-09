@@ -5,9 +5,9 @@ import PostUser from "@/components/postUser/postUser";
 import { getPost } from "@/lib/data";
 
 // FETCH DATA WITH API
-/* const getData = async (slug) => {
+const getData = async (slug) => {
   const res = await fetch(
-    `https://jsonplaceholder.typicode.com/posts/${slug}`,
+    `http://localhost:3000/api/blog/${slug}`,
     { cache: "no-store" }
   );
 
@@ -16,7 +16,7 @@ import { getPost } from "@/lib/data";
   }
 
   return res.json();
-}; */
+};
 
 export const generateMetadata = async ({ params }) => {
   const { slug } = params;
@@ -33,10 +33,10 @@ const SinglePostPage = async ({ params }) => {
   const { slug } = params; // const slug = params.slug;
 
   // FETCH DATA WITH API
-  /* const post = await getData(slug); */
+  const post = await getData(slug);
 
   // FETCH DATA WITHOUT API
-  const post = await getPost(slug);
+  /* const post = await getPost(slug); */
 
   return (
     <div className={styles.container}>
