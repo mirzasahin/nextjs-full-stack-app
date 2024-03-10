@@ -5,7 +5,7 @@ import { connectToDb } from "./utils";
 import { signIn, signOut } from "./auth";
 import bcrypt from "bcryptjs";
 
-export const addPost = async (formData) => {
+export const addPost = async (prevState, formData) => {
   const title = formData.get("title");
   const desc = formData.get("desc");
   const slug = formData.get("slug");
@@ -26,6 +26,7 @@ export const addPost = async (formData) => {
     await newPost.save();
     console.log("save to db");
     revalidatePath("/blog"); // Whenever we add a new post even if we cache our blog posts it's going to revalidate our path and it's going to show us the fresh data.
+    revalidatePath("/admin");
   } catch (error) {
     console.log(error);
     return { error: "Something went wrong!" };
@@ -43,6 +44,45 @@ export const deletePost = async (formData) => {
     await Post.findByIdAndDelete(id);
     console.log("deleted from db");
     revalidatePath("/blog"); // Whenever we add a new post even if we cache our blog posts it's going to revalidate our path and it's going to show us the fresh data.
+    revalidatePath("/admin");
+  } catch (error) {
+    console.log(error);
+    return { error: "Something went wrong!" };
+  }
+};
+
+export const addUser = async (prevState, formData) => {
+  const { username, email, password, img } = Object.fromEntries(formData); // Object destructuring | Short way
+
+  try {
+    connectToDb();
+    const newUser = new User({
+      // If data names are same, you can use just title, desc, slug and userId.
+      username,
+      email,
+      password,
+      img,
+    });
+
+    await newUser.save();
+    console.log("save to db");
+    revalidatePath("/admin"); // Whenever we add a new post even if we cache our blog posts it's going to revalidate our path and it's going to show us the fresh data.
+  } catch (error) {
+    console.log(error);
+    return { error: "Something went wrong!" };
+  }
+};
+
+export const deleteUser = async (formData) => {
+  const { id } = Object.fromEntries(formData); // Object destructuring | Short way
+
+  try {
+    connectToDb();
+
+    await Post.deleteMany({ userId: id });
+    await User.findByIdAndDelete(id);
+    console.log("deleted from db");
+    revalidatePath("/admin"); // Whenever we add a new post even if we cache our blog posts it's going to revalidate our path and it's going to show us the fresh data.
   } catch (error) {
     console.log(error);
     return { error: "Something went wrong!" };
@@ -60,7 +100,8 @@ export const handleLogout = async () => {
 };
 
 export const register = async (previousState, formData) => {
-  const { username, email, password, img, passwordRepeat } = Object.fromEntries(formData)
+  const { username, email, password, img, passwordRepeat } =
+    Object.fromEntries(formData);
 
   if (password !== passwordRepeat) {
     return { error: "Passwords do not match" };
@@ -100,9 +141,8 @@ export const login = async (prevState, formData) => {
   try {
     await signIn("credentials", { username, password });
   } catch (error) {
-
-    if(error.message.includes("CredentialsSignin")){
-      return {error: "Invalid username or password"}
+    if (error.message.includes("CredentialsSignin")) {
+      return { error: "Invalid username or password" };
     }
     throw error;
   }
