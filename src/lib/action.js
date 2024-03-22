@@ -10,6 +10,7 @@ export const addPost = async (prevState, formData) => {
   const desc = formData.get("desc");
   const slug = formData.get("slug");
   const userId = formData.get("userId");
+  const img = formData.get("img")
 
   /* const {title, desc, slug, userId} = Object.fromEntries(formData); */ // Object destructuring | Short way
 
@@ -21,6 +22,7 @@ export const addPost = async (prevState, formData) => {
       desc: desc,
       slug: slug,
       userId: userId,
+      img: img,
     });
 
     await newPost.save();
